@@ -26,14 +26,14 @@ def read_files(dir_root_data='./data', file_type_data='txt'):
     读取全部文件
     """
     dir_data_all=glob.glob(dir_root_data + '/*.' + file_type_data)
-    category_names = {}
+    category_names = []
     all_category = []
     for dir_file in dir_data_all:
         category = dir_file.split('/')[-1].split('.')[0]
         all_category.append(category)
-        names = [unicode_to_ascii(name) for name in open(
+        names = [[category, unicode_to_ascii(name)] for name in open(
             dir_file).read().strip().split('\n')]
-        category_names[category] = names
+        category_names += names
     n_category = len(all_category)
     print('n_category = {}'.format(n_category))
     return category_names, all_category, n_category
