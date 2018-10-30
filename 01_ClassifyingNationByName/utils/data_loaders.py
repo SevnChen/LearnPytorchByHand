@@ -9,8 +9,9 @@ class NameDataset(Dataset):
         use:DataLoader(train_dataset2, batch_size=8, shuffle=True)
     """
 
-    def __init__(self, data, allcategory, transform=None):
+    def __init__(self, data, allcategory, max_length, transform=None):
         self.data = data
+        self.max_length = max_length
         self.all_category = {
             category: Variable(torch.LongTensor([allcategory.index(category)]))
             for category in allcategory}
@@ -20,8 +21,8 @@ class NameDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        lable, name = self.data[index]
+        raw_lable, raw_name = self.data[index]
         if self.transform:
-            name = self.transform(name)
-            lable = self.all_category[lable]
-        return lable, name
+            name = self.transform(raw_name, self.max_length)
+            lable = self.all_category[raw_lable]
+        return lable, name, raw_lable, raw_name
